@@ -10,8 +10,8 @@ FROM nginx:stable-alpine
 
 WORKDIR /usr
 
-COPY --from=build .next /usr/share/nginx/html
-COPY --from=build nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/.next /usr/share/nginx/html
+COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 3000
 
