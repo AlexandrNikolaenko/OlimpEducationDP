@@ -7,7 +7,6 @@ COPY . .
 RUN npm run build
 
 FROM nginx:stable-alpine
-WORKDIR /usr/app
 COPY --from=build_front dist /usr/share/nginx/html
 COPY --from=build_front nginx.conf /etc/nginx/conf.d/default.conf
 
