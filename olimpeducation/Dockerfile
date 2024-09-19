@@ -8,8 +8,6 @@ RUN npm run build
 
 FROM nginx:stable-alpine
 
-WORKDIR /usr
-
 COPY --from=build /app/.next /usr/share/nginx/html
 COPY --from=build /app/nginx.conf /etc/nginx/conf.d/default.conf
 
