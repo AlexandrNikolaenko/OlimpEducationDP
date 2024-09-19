@@ -1,4 +1,4 @@
-FROM node:alpine as build
+FROM node:alpine as build_front
 
 WORKDIR /usr/app
 COPY package.json package.json
@@ -8,8 +8,8 @@ RUN npm run build
 
 FROM nginx:stable-alpine
 WORKDIR /usr/app
-COPY dist /usr/share/nginx/html
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build_front dist /usr/share/nginx/html
+COPY --from=build_front nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 3000
 
