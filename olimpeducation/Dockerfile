@@ -1,6 +1,6 @@
 FROM node:alpine as build_front
 
-WORKDIR /usr/app
+WORKDIR '/usr/app'
 COPY package.json package.json
 RUN npm install
 COPY . .
