@@ -1,11 +1,10 @@
 FROM node:alpine as build
 
-WORKDIR /usr/app
-COPY package.json package.json
+WORKDIR /usr/src/app
+COPY package.json /usr/src/app
 RUN npm install
-COPY server.js /usr/app/
-COPY . .
+COPY . /usr/src/app
 
 EXPOSE 5000
 
-CMD ["node server.js"]
+CMD ["npm", "start"]
