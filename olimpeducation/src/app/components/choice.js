@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import TaskList from "./taskList"
 import { tags } from "./Tags";
 
-const path = 'http://localhost:3000/'
+const path = 'http://87.228.26.46:3000/'
 
 function ChoiceClass ({displayWidth, changeValue}) {
     let [choiceClass, setChoiceClass] = useState(8);
