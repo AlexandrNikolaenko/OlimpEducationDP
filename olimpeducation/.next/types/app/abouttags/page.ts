@@ -1,4 +1,4 @@
-// File: D:\OpenServer\OSPanel\domains\OlimpEdu\olimpeducation\src\app\abouttags\page.js
+// File: D:\OpenServer\OSPanel\domains\OlimpEduDp\olimpeducation\src\app\abouttags\page.js
 import * as entry from '../../../../src/app/abouttags/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 

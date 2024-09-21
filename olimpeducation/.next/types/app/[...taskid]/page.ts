@@ -1,4 +1,4 @@
-// File: D:\OpenServer\OSPanel\domains\OlimpEdu\olimpeducation\src\app\[...taskid]\page.js
+// File: D:\OpenServer\OSPanel\domains\OlimpEduDp\olimpeducation\src\app\[...taskid]\page.js
 import * as entry from '../../../../src/app/[...taskid]/page.js'
 import type { ResolvingMetadata, ResolvingViewport } from 'next/dist/lib/metadata/types/metadata-interface.js'
 
