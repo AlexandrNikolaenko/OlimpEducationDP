@@ -6,11 +6,7 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-FROM nginx:stable-alpine
-COPY --from=build_front /usr/app/nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build_front /usr/app/_next /usr/share/nginx/html
-
 EXPOSE 3000
 
-CMD [ "nginx", "-g", "daemon off;" ]
+CMD [ "npm", "start" ]
 
