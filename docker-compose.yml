@@ -3,8 +3,8 @@ networks:
 
 services:
   nginx:
-    build: ./nginx
-    image: nginx:stable-alpine
+    build: 
+      context: ./nginx
     ports:
       - "80:80"
       - "443:443"
