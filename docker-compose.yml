@@ -3,8 +3,7 @@ networks:
 
 services:
   nginx:
-    build: 
-      context: ./nginx
+    build: ./nginx
     ports:
       - "80:80"
       - "443:443"
@@ -16,13 +15,15 @@ services:
     
 
   backend:
-    build:
-      context: ./database
+    build: ./database
+    ports:
+      - 5000:5000
     networks:
       - dev
 
   frontend:
-    build:
-      context: ./olimpeducation
+    build: ./olimpeducation
+    ports:
+      - 3000:3000
     networks:
       - dev
