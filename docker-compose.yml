@@ -17,13 +17,13 @@ services:
   backend:
     build: ./database
     ports:
-      - 5000:5000
+      - '5000:5000'
     networks:
       - dev
 
   frontend:
     build: ./olimpeducation
     ports:
-      - 3000:3000
+      - '3000:3000'
     networks:
       - dev
