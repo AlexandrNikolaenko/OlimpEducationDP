@@ -282,14 +282,14 @@ app.post('/signup', function(request, response){
     "Access-Control-Allow-Origin": "*"
   })
 
-  fetch(`http://localhost:5000/signup/check?email=${request.body.email}`, {method: 'GET'})
+  fetch(`http://${host}/api/signup/check?email=${request.body.email}`, {method: 'GET'})
     .then(res => res.json())
     .then(function (data) {
       console.log(data.isUser);
       if (data.isUser) {
         response.send({userId: null, name: null});
       } else {
-        fetch('http://localhost:5000/signup/getid', {method: 'GET'})
+        fetch('http://${host}/api/signup/getid', {method: 'GET'})
           .then(res => res.json())
           .then(function (data) {
             const connection = mysql2.createConnection({
@@ -376,7 +376,7 @@ app.post('/addtask', function(request, response) {
     }
   });
 
-  fetch(`http://localhost:5000/getdoneid?userid=${request.body.userId}`, {method: 'GET'})
+  fetch(`http://${host}/api/getdoneid?userid=${request.body.userId}`, {method: 'GET'})
     .then(res => res.json())
     .then(data => {
       let newData = data.ids;
@@ -419,7 +419,7 @@ app.post('/removetask', function(request, response) {
     }
   });
 
-  fetch(`http://localhost:5000/getdoneid?userid=${request.body.userId}`, {method: 'GET'})
+  fetch(`http://${host}/api/getdoneid?userid=${request.body.userId}`, {method: 'GET'})
     .then(res => res.json())
     .then(data => {
       let newData = data.ids.filter(i => Number(i) != Number(request.body.id)).join('/')
