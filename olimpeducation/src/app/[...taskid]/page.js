@@ -2,15 +2,16 @@
 
 import { TaskImage } from "../components/taskImage";
 import { InfoPart, ButtonPart } from "../components/infoParts";
+import { host } from "../components/host";
 
 export default async function Page({params}) {
     let url, answerUrl;
     let id = params.taskid[0];
 
-    await fetch(`http://localhost:5000/answer?id=${id}`, {method: 'GET'})
+    await fetch(`http://${host}:5000/answer?id=${id}`, {method: 'GET'})
             .then(res => res.json()).then(data => answerUrl = data.url);
 
-    await fetch(`http://localhost:5000/task?id=${id}`, {method: 'GET'})
+    await fetch(`http://${host}:5000/task?id=${id}`, {method: 'GET'})
             .then(res => res.json())
             .then(data => url = data.url);
 

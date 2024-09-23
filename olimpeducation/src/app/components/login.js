@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from "react"
+import { host } from "./host";
 
 
 
@@ -44,7 +45,7 @@ export default function Login ({close}){
                         e.preventDefault();
                         let formData = new FormData(document.getElementById('login-form'));
                         formData = Object.fromEntries(formData);
-                        sendFormData('http://localhost:5000/login', 'POST', formData)
+                        sendFormData(`http://${host}:5000/login`, 'POST', formData)
                         }}>
                         <input id={1} placeholder="Адрес электронной почты" name="email" className="px-7 bg-transparent py-2.5 rounded-[10px] border-super-light border-2 placeholder:font-serif palceholder:text-xl max-[1146px]:placeholder:text-base max-[640px]:placeholder:text-sm palceholder:font-normal"></input>
                         <input id={2} placeholder="Пароль" name="password" type='password' className="px-7 bg-transparent py-2.5 rounded-[10px] border-super-light border-2 placeholder:font-serif palceholder:text-xl palceholder:font-normal"></input>
@@ -68,7 +69,7 @@ export default function Login ({close}){
                         formData = Object.fromEntries(formData);
                         if (formData.password != formData.repassword) setIsCorrectPass(false);
                         else {
-                            sendFormData('http://localhost:5000/signup', 'POST', formData);
+                            sendFormData(`http://${host}:5000/signup`, 'POST', formData);
                             setIsCorrectPass(true);
                         }
                         

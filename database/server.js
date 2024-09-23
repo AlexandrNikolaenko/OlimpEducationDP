@@ -4,6 +4,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors');
 const e = require('express');
 
+const host = 'olimpeducation.ru'
 
 const app = express();
 
@@ -134,7 +135,7 @@ app.get('/task', function(request, response) {
     id = '0'.concat(id);
   };
 
-  response.send({url: `http://localhost:3000/%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B8/ID${id}.jpg`});
+  response.send({url: `http://${host}/%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B8/ID${id}.jpg`});
 });
 
 // Получаем название файла с решением для скачивания
@@ -171,7 +172,7 @@ app.get('/answer', function(request, response) {
   });
 
   connection.query(`select nameFile from Answers where nameFile like "%${id}.pdf"`, function(_, result) {
-    response.send({url: `http://localhost:3000/Answers/${result[0].nameFile}`});
+    response.send({url: `http://${host}/Answers/${result[0].nameFile}`});
   });
 
   connection.end();
