@@ -26,7 +26,7 @@ app.get('/', function(request, response) {
     })
 
     const connection = mysql2.createConnection({
-        host: 'localhost',
+        host: host,
         user: 'AliBaBa',
         password: 'A9l0E6x0',
         database: 'OlimpEducation'
