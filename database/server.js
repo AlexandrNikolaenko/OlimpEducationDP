@@ -5,6 +5,7 @@ const cors = require('cors');
 const e = require('express');
 
 const host = 'olimpeducation.ru'
+const ip = '192.168.0.2'
 
 const app = express();
 
@@ -26,7 +27,7 @@ app.get('/', function(request, response) {
     })
 
     const connection = mysql2.createConnection({
-        host: host,
+        host: ip,
         user: 'AliBaBa',
         password: 'A9l0E6x0',
         database: 'OlimpEducation'
@@ -101,7 +102,7 @@ app.get('/default', function(request, response){
   })
   
   const connection = mysql2.createConnection({
-    host: 'localhost',
+    host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
     database: 'OlimpEducation'
@@ -158,7 +159,7 @@ app.get('/answer', function(request, response) {
   };
 
   const connection = mysql2.createConnection({
-    host: 'localhost',
+    host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
     database: 'OlimpEducation'
@@ -190,7 +191,7 @@ app.post('/login', function(request, response) {
   });
 
   const connection = mysql2.createConnection({
-    host: 'localhost',
+    host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
     database: 'OlimpEducation'
@@ -223,7 +224,7 @@ app.get('/signup/check', function(request, response){
   });
 
   const connection = mysql2.createConnection({
-    host: 'localhost',
+    host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
     database: 'Olimpeducation'
@@ -253,7 +254,7 @@ app.get('/signup/getid', function(_, response) {
   });
 
   const connection = mysql2.createConnection({
-    host: 'localhost',
+    host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
     database: 'Olimpeducation'
@@ -325,7 +326,7 @@ app.get('/getdoneid', function(request, response) {
   })
 
   const connection = mysql2.createConnection({
-    host: 'localhost',
+    host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
     database: 'Olimpeducation'
@@ -364,7 +365,7 @@ app.post('/addtask', function(request, response) {
   })
 
   const connection = mysql2.createConnection({
-    host: 'localhost',
+    host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
     database: 'Olimpeducation'
@@ -407,7 +408,7 @@ app.post('/removetask', function(request, response) {
   })
 
   const connection = mysql2.createConnection({
-    host: 'localhost',
+    host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
     database: 'Olimpeducation'
