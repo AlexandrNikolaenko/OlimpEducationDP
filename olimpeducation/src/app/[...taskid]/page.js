@@ -8,10 +8,10 @@ export default async function Page({params}) {
     let url, answerUrl;
     let id = params.taskid[0];
 
-    await fetch(`http://${host}:5000/answer?id=${id}`, {method: 'GET'})
+    await fetch(`http://${host}/api/answer?id=${id}`, {method: 'GET'})
             .then(res => res.json()).then(data => answerUrl = data.url);
 
-    await fetch(`http://${host}:5000/task?id=${id}`, {method: 'GET'})
+    await fetch(`http://${host}/api/task?id=${id}`, {method: 'GET'})
             .then(res => res.json())
             .then(data => url = data.url);
 
