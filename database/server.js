@@ -294,7 +294,7 @@ app.post('/signup', function(request, response){
           .then(res => res.json())
           .then(function (data) {
             const connection = mysql2.createConnection({
-              host: 'localhost',
+              host: ip,
               user: 'AliBaBa',
               password: 'A9l0E6x0',
               database: 'OlimpEducation'
