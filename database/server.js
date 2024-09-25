@@ -5,7 +5,7 @@ const cors = require('cors');
 const e = require('express');
 
 const host = 'olimpeducation.ru'
-const ip = '192.168.0.2'
+const ip = '87.228.26.46'
 
 const app = express();
 
