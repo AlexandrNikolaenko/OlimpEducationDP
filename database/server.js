@@ -227,7 +227,7 @@ app.get('/signup/check', function(request, response){
     host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
-    database: 'Olimpeducation'
+    database: 'OlimpEducation'
   });
 
   connection.connect(function (error) {
@@ -257,7 +257,7 @@ app.get('/signup/getid', function(_, response) {
     host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
-    database: 'Olimpeducation'
+    database: 'OlimpEducation'
   });
 
   connection.connect(function (error) {
@@ -329,7 +329,7 @@ app.get('/getdoneid', function(request, response) {
     host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
-    database: 'Olimpeducation'
+    database: 'OlimpEducation'
   })
 
   connection.connect(function (error) {
@@ -368,7 +368,7 @@ app.post('/addtask', function(request, response) {
     host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
-    database: 'Olimpeducation'
+    database: 'OlimpEducation'
   })
 
   connection.connect(function (error) {
@@ -411,7 +411,7 @@ app.post('/removetask', function(request, response) {
     host: ip,
     user: 'AliBaBa',
     password: 'A9l0E6x0',
-    database: 'Olimpeducation'
+    database: 'OlimpEducation'
   })
 
   connection.connect(function (error) {
