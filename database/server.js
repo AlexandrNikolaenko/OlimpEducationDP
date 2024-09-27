@@ -290,7 +290,7 @@ app.post('/signup', function(request, response){
       if (data.isUser) {
         response.send({userId: null, name: null});
       } else {
-        fetch('http://${host}/api/signup/getid', {method: 'GET'})
+        fetch(`http://${host}/api/signup/getid`, {method: 'GET'})
           .then(res => res.json())
           .then(function (data) {
             const connection = mysql2.createConnection({
