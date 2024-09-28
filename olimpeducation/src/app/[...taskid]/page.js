@@ -7,7 +7,7 @@ import { host } from "../components/host";
 export default async function Page({params}) {
     let url, answerUrl;
     let id = params.taskid[0];
-    console.log(id);
+    console.log(params.taskid);
 
     await fetch(`http://${host}/api/answer?id=${id}`, {method: 'GET'})
             .then(res => res.json()).then(data => answerUrl = data.url);
