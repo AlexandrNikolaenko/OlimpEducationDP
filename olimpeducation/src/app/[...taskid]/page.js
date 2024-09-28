@@ -9,7 +9,7 @@ export default async function TaskId({params}) {
     let id = params.taskid[0];
     console.log(params.taskid);
 
-    if (typeof Number(id) == 'number'){
+    if (!isNaN(id)){
         await fetch(`http://${host}/api/answer?id=${id}`, {method: 'GET'})
             .then(res => res.json()).then(data => answerUrl = data.url);
 
