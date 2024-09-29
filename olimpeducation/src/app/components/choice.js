@@ -152,7 +152,7 @@ export default function ChoiceAndTasks(){
                 </div>
                 <div className="flex flex-col gap-7">
                 <h4 className="font-help text-[32px]/[1.3em] font-normal tracking-[0.04em] text-right">Стремись на <span className="text-bright">вершину Олимпа</span> с нами</h4>
-                <p className="font-sans text-2xl/[25px] tracking-[0.02em] text-right">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют</span></p>
+                <p className="font-sans text-2xl/[25px] tracking-[0.02em] text-right">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют.</span> (если по выбранным тегам не будет результатов, то отбразиться последний полученный результат)</p>
                 </div>
                 </div>
                 
@@ -171,7 +171,7 @@ export default function ChoiceAndTasks(){
                 <div className="wrapper mx-auto flex flex-col px-0 max-[1280px]:px-5">
                     <div className="flex flex-col gap-7">
                         <h4 className="font-help text-lg/[1.3em] font-normal tracking-[0.04em]">Стремись на <span className="text-bright">вершину Олимпа</span> с нами</h4>
-                        <p className="font-sans text-sm/[25px] tracking-[0.02em]">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют</span></p>
+                        <p className="font-sans text-sm/[25px] tracking-[0.02em]">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют.</span>(если по выбранным тегам не будет результатов, то отбразиться последний полученный результат)</p>
                     </div>
                     <div className="w-full flex flex-col gap-5 max-[400px]:gap-2.5">
                         <p className="font-sans text-sm/[25px] tracking-[0.02em]">Выберите класс</p>
@@ -205,7 +205,7 @@ export default function ChoiceAndTasks(){
                     <div className="flex flex-col gap-5 items-center">
                         <div className="flex flex-col gap-2.5 w-[588px]">
                             <h4 className="font-help font-normal tracking-[0.04em] text-center text-2xl/[1.3em]">Стремись на <span className="text-bright">вершину Олимпа</span> с нами</h4>
-                            <p className="font-sans tracking-[0.02em] text-center text-lg/[25px]">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют</span></p>
+                            <p className="font-sans tracking-[0.02em] text-center text-lg/[25px]">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют.</span>(если по выбранным тегам не будет результатов, то отбразиться последний полученный результат)</p>
                         </div>
                         <div className="flex justify-between gap-2">
                             <div className="flex flex-col justify-between h-[285px]">
