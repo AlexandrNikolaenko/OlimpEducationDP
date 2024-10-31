@@ -14,7 +14,7 @@ export default function Footer(){
                 <Logo />
                 <div>
                     <span className="text-bright max-[530px]:text-sm">Автор проекта: </span>
-                    <Link href={'https://t.me/tasyagri'} className="max-[530px]:text-sm">Возчикова Таисия</Link>
+                    <Link href={'https://t.me/tasyagri'} className="max-[530px]:text-sm">Гриваченко Таисия</Link>
                 </div>
             </div>
         </footer>
