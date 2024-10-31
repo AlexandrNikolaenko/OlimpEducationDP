@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { host } from "./host";
 
 function downloadFile(fileName, url) {
@@ -86,4 +87,21 @@ export function AsResolved({taskId, isDone}) {
     } else {
         return <button className="font-sans text-2xl/[25px] max-[1146px]:text-lg/[25px] max-[700px]:text-sm/[18px] tracking-[0.02em] px-5 max-[1146px]:px-3.5 py-[5px] max-[1146px]:py-[4px] bg-medium rounded-[10px]" onClick={() => alert('Необходимо войти в систему')}>Отметить решенным</button>
     }
+}
+
+export function SubmitButton ({color, text, id}) {
+
+    return (
+        <>
+            {id ? <button type={'submit'} className={`py-2.5 px-5 rounded-[10px] bg-${color}`} id={id}>{text}</button> : <button type={'submit'} className={`py-2.5 px-5 rounded-[10px] bg-${color}`}>{text}</button>}
+        </>
+    )
+}
+
+export function ArrowButton ({ onClick, isOpen }) {
+    return (
+        <button onClick={onClick} className={`${isOpen ? 'rotate-180' : 'rotate-0'} transition-all duration-200`}>
+            {window.innerWidth > 640 ? <Image alt='arrow' src={'/Arrow.svg'} height={43} width={43}/> : <Image alt='arrow' src={'/Arrow.svg'} height={26} width={26}/>}
+        </button>
+    )
 }

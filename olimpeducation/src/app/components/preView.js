@@ -2,8 +2,9 @@
 
 import { ScrollButton } from "./Buttons";
 import { useState, useEffect } from "react";
+import { host } from "./host";
 
-const path = 'http://87.228.26.46/'
+const path = `http://${host}/`
 
 export default function PreView (){
     const [isWindow, setIsWindow] = useState(false);

@@ -4,7 +4,6 @@ import { useState } from "react"
 import { host } from "./host";
 
 
-
 export default function Login ({close}){
     const [isRegUser, setIsRegUser] = useState(true);
     const [regErr, setRegErr] = useState(false);

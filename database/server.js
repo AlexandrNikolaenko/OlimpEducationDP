@@ -1,13 +1,19 @@
 const mysql2 = require('mysql2');
 const express = require('express');
-const bodyParser = require('body-parser')
+const multer = require('multer');
+const bodyParser = require('body-parser');
 const cors = require('cors');
-const e = require('express');
+const fs = require('fs');
 
-const host = 'olimpeducation.ru'
-const ip = '87.228.26.46'
+const host = 'olimpeducation.ru';
+const ip = '87.228.26.46';
 
 const app = express();
+
+app.use(bodyParser.json());
+app.use(cors());
+app.use('/img/Answers', express.static('./img/Answers'));
+app.use('/img/Tasks', express.static('./img/Tasks'));
 
 function createTagsQuery(tagsStroke){
   let queryPart = '';
@@ -18,7 +24,39 @@ function createTagsQuery(tagsStroke){
   return queryPart;
 }
 
-// Получаем список заданий из базы данных по введенным критериям
+class Connection {
+  constructor () {
+    this.con =  mysql2.createConnection({
+      host: ip,
+      user: 'AliBaBa',
+      password: 'A9l0E6x0',
+      database: 'OlimpEducation'
+    })}
+
+  connect(callback) {
+    this.con.connect((err) => callback(err));
+  }
+
+  query(querySql, callback) {
+    this.con.query(querySql, (err, result) => callback(err, result));
+  }
+
+  end(callback) {
+    this.con.end((err) => {if (callback) callback(err)});
+  }
+}
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    if (typeof req.body.class == 'string') cb(null, `./img/Tasks/`); // Папка для хранения загруженных файлов
+    else cb(null, `./img/Answers/`);
+  },
+  filename: (req, file, cb) => {
+      cb(null, file.originalname); // Сохранение файла с оригинальным именем
+  }
+});
+
+const upload = multer({ storage: storage });
 
 app.get('/', function(request, response) {
     response.set({
@@ -26,71 +64,63 @@ app.get('/', function(request, response) {
       "Access-Control-Allow-Origin": "*",
     })
 
-    const connection = mysql2.createConnection({
-        host: ip,
-        user: 'AliBaBa',
-        password: 'A9l0E6x0',
-        database: 'OlimpEducation'
-    });
-    
-    connection.connect(function(error){
-      if(error){
+    const c = new Connection();
+    c.connect(function (error) {
+      if (error) {
         console.log(new Error(error));
       }
     });
 
     if (request.query.class != '0' && request.query.level != '0' && request.query.tags != ''){
-      connection.query(`select * from Tasks where class = ${request.query.class} and level = ${request.query.level.concat(createTagsQuery(request.query.tags))} order by _id`, 
+      c.query(`select * from Tasks where class = ${request.query.class} and level = ${request.query.level.concat(createTagsQuery(request.query.tags))} order by _id`, 
         function(_, results) {
             response.send(results);
         }
       )
     } else if (request.query.class == '0' && request.query.level == '0' && request.query.tags == ''){
-      connection.query(`select * from Tasks order by _id`, 
+      c.query(`select * from Tasks order by _id`, 
         function(_, results) {
             response.send(results);
         }
       )
     } else if (request.query.class != '0' && request.query.level == '0' && request.query.tags != ''){
-      connection.query(`select * from Tasks where class = ${request.query.class.concat(createTagsQuery(request.query.tags))} order by _id`, 
+      c.query(`select * from Tasks where class = ${request.query.class.concat(createTagsQuery(request.query.tags))} order by _id`, 
         function(_, results) {
             response.send(results);
         }
       )
     } else if (request.query.class == '0' && request.query.level == '0' && request.query.tags != ''){
-      connection.query(`select * from Tasks where class > ${request.query.class.concat(createTagsQuery(request.query.tags))} order by _id`, 
+      c.query(`select * from Tasks where class > ${request.query.class.concat(createTagsQuery(request.query.tags))} order by _id`, 
         function(_, results) {
             response.send(results);
         }
       )
     } else if (request.query.class == '0' && request.query.level != '0' && request.query.tags != ''){
-      connection.query(`select * from Tasks where level = ${request.query.level.concat(createTagsQuery(request.query.tags))} order by _id`, 
+      c.query(`select * from Tasks where level = ${request.query.level.concat(createTagsQuery(request.query.tags))} order by _id`, 
         function(_, results) {
             response.send(results);
         }
       )
     } else if (request.query.class != '0' && request.query.level == '0' && request.query.tags == ''){
-      connection.query(`select * from Tasks where level = ${request.query.level} order by _id`, 
+      c.query(`select * from Tasks where class = ${request.query.class} order by _id`, 
         function(_, results) {
             response.send(results);
         }
       )
     } else if (request.query.class != '0' && request.query.level != '0' && request.query.tags == ''){
-      connection.query(`select * from Tasks where class = ${request.query.class} and level = ${request.query.level} order by _id`, 
+      c.query(`select * from Tasks where class = ${request.query.class} and level = ${request.query.level} order by _id`, 
         function(_, results) {
             response.send(results);
         }
       )
     } else {
-      connection.query(`select * from Tasks where class = ${request.query.class} order by _id`, 
+      c.query(`select * from Tasks where class = ${request.query.class} order by _id`, 
         function(_, results) {
             response.send(results);
         }
       )
-    }
-    // console.log(`select * from Tasks where class = ${request.query.class} and level = ${request.query.level.concat(createTagsQuery(request.query.tags))}`)
-    
-    connection.end();
+    }    
+    c.end();
 })
 
 // Получаем дефолтный список задач (до выбор критериев)
@@ -101,25 +131,19 @@ app.get('/default', function(request, response){
     "Access-Control-Allow-Origin": "*",
   })
   
-  const connection = mysql2.createConnection({
-    host: ip,
-    user: 'AliBaBa',
-    password: 'A9l0E6x0',
-    database: 'OlimpEducation'
-  });
-  
-  connection.connect(function(error){
-    if(error){
-      console.log(error);
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
     }
   });
   
-  connection.query(`select * from Tasks where _id < ${Number(request.query.amount) + 1}`, 
+  c.query(`select * from Tasks where _id < ${Number(request.query.amount) + 1}`, 
       function(_, results) {
           response.send(results);
       }
   );
-  connection.end();
+  c.end();
 });
 
 // Получаем название файла с заданием для скачивания
@@ -136,7 +160,18 @@ app.get('/task', function(request, response) {
     id = '0'.concat(id);
   };
 
-  response.send({url: `http://${host}/%D0%97%D0%B0%D0%B4%D0%B0%D1%87%D0%B8/ID${id}.jpg`});
+  let url = [`http://${host}/api/img/Tasks/ID${id}.jpg`];
+
+  async function check() {
+    for (let i = 1; i < 4; i++) {
+      let r = await fetch(`http://${host}/api/img/Tasks/ID${id}(${i}).jpg`);
+      if (r.status == 200) url.push(`http://${host}/api/img/Tasks/ID${id}(${i}).jpg`);
+      else break;
+    }
+    response.send({url: url});
+  }
+
+  check();
 });
 
 // Получаем название файла с решением для скачивания
@@ -158,29 +193,19 @@ app.get('/answer', function(request, response) {
     id = '0'.concat(id);
   };
 
-  const connection = mysql2.createConnection({
-    host: ip,
-    user: 'AliBaBa',
-    password: 'A9l0E6x0',
-    database: 'OlimpEducation'
-  });
-
-  connection.connect(function(error){
-    if(error){
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
       console.log(new Error(error));
-    } else {
     }
   });
 
-  connection.query(`select nameFile from Answers where nameFile like "%${id}.pdf"`, function(_, result) {
-    response.send({url: `http://${host}/Answers/${result[0].nameFile}`});
+  c.query(`select nameFile from Answers where nameFile like "%${id}.pdf"`, function(_, result) {
+    response.send({url: `http://${host}/api/img/Answers/${result[0].nameFile}`});
   });
 
-  connection.end();
+  c.end();
 });
-
-app.use(bodyParser.json());
-app.use(cors());
 
 // Обработка на вход пользователя
 
@@ -190,20 +215,14 @@ app.post('/login', function(request, response) {
     "Access-Control-Allow-Origin": "*"
   });
 
-  const connection = mysql2.createConnection({
-    host: ip,
-    user: 'AliBaBa',
-    password: 'A9l0E6x0',
-    database: 'OlimpEducation'
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
   });
 
-  connection.connect(function (error) {
-    if(error){
-      console.log(new Error(error));
-    } 
-  }),
-
-  connection.query(`select * from Users where email = '${request.body.email}' and password = '${request.body.password}'`, function (_, result) {
+  c.query(`select * from Users where email = '${request.body.email}' and password = '${request.body.password}'`, function (_, result) {
     response.status(200);
     if (result.length != 0) {
       response.send({name: result[0].name, userId: result[0].userId});
@@ -212,7 +231,7 @@ app.post('/login', function(request, response) {
     }
   })
 
-  connection.end();
+  c.end();
 });
 
 // Проверка уникальности пользователя при регистрации
@@ -223,26 +242,22 @@ app.get('/signup/check', function(request, response){
     "Access-Control-Allow-Origin": "*"
   });
 
-  const connection = mysql2.createConnection({
-    host: ip,
-    user: 'AliBaBa',
-    password: 'A9l0E6x0',
-    database: 'OlimpEducation'
-  });
-
-  connection.connect(function (error) {
-    if(error) {
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
       console.log(new Error(error));
     }
   });
 
-  connection.query(`select * from Users where email = '${request.query.email}'`, function (_, result) {
+  c.query(`select * from Users where email = '${request.query.email}'`, function (_, result) {
     if (result.length == 0){
       response.send({isUser: false});
     } else {
       response.send({isUser: true});
     }
-  })
+  });
+
+  c.end();
 });
 
 // Получаем уникальный id для пользователя
@@ -253,24 +268,18 @@ app.get('/signup/getid', function(_, response) {
     "Access-Control-Allow-Origin": "*"
   });
 
-  const connection = mysql2.createConnection({
-    host: ip,
-    user: 'AliBaBa',
-    password: 'A9l0E6x0',
-    database: 'OlimpEducation'
-  });
-
-  connection.connect(function (error) {
+  const c = new Connection();
+  c.connect(function (error) {
     if (error) {
       console.log(new Error(error));
     }
   });
 
-  connection.query('select max(userId) as count from Users', function (_, result) {
+  c.query('select max(userId) as count from Users', function (_, result) {
     response.send({id: result[0].count + 1})
   });
 
-  connection.end();
+  c.end();
 })
 
 // Получаем данные и регистируем пользователя
@@ -293,25 +302,20 @@ app.post('/signup', function(request, response){
         fetch(`http://${host}/api/signup/getid`, {method: 'GET'})
           .then(res => res.json())
           .then(function (data) {
-            const connection = mysql2.createConnection({
-              host: ip,
-              user: 'AliBaBa',
-              password: 'A9l0E6x0',
-              database: 'OlimpEducation'
-            });
+            const с = new Connection();
           
-            connection.connect(function (error) {
+            с.connect(function (error) {
               if(error){
                 console.log(new Error(error));
               }
             });
 
-            connection.query(`insert into Users set userId = ${data.id}, name = '${request.body.name}', donetask_ids = '', password = '${request.body.password}', email = '${request.body.email}'`, function (err) {
+            с.query(`insert into Users set userId = ${data.id}, name = '${request.body.name}', donetask_ids = '', password = '${request.body.password}', email = '${request.body.email}'`, function (err) {
               console.log(err);
               response.send({userId: data.id, name: request.body.name});
             })
           
-            connection.end();
+            с.end();
           })
       }
     })
@@ -325,25 +329,18 @@ app.get('/getdoneid', function(request, response) {
     "Access-Control-Allow-Origin": "*"
   })
 
-  const connection = mysql2.createConnection({
-    host: ip,
-    user: 'AliBaBa',
-    password: 'A9l0E6x0',
-    database: 'OlimpEducation'
-  })
-
-  connection.connect(function (error) {
+  const c = new Connection();
+  c.connect(function (error) {
     if (error) {
       console.log(new Error(error));
     }
-  })
+  });
 
-  connection.query(`select donetask_ids from Users where userId = ${Number(request.query.userid)}`, function (err, result) {
+  c.query(`select donetask_ids from Users where userId = ${Number(request.query.userid)}`, function (err, result) {
     if (err) {
       console.log(new Error(err));
       return
     }
-
     if (result[0].donetask_ids.length != 0) {
       let ids = result[0].donetask_ids.split('/').map(elem => String(elem));
       response.send({ids: ids});
@@ -352,7 +349,7 @@ app.get('/getdoneid', function(request, response) {
     }
   });
 
-  connection.end();
+  c.end();
 });
 
 // Добавляем новое задание в список отмеченных пользователем заданий
@@ -364,14 +361,8 @@ app.post('/addtask', function(request, response) {
     "Access-Control-Allow-Origin": "*"
   })
 
-  const connection = mysql2.createConnection({
-    host: ip,
-    user: 'AliBaBa',
-    password: 'A9l0E6x0',
-    database: 'OlimpEducation'
-  })
-
-  connection.connect(function (error) {
+  const c = new Connection();
+  c.connect(function (error) {
     if (error) {
       console.log(new Error(error));
     }
@@ -386,7 +377,7 @@ app.post('/addtask', function(request, response) {
         newData.push(request.body.id);
         newData = newData.join('/');
       }
-      connection.query(`update Users set donetask_ids = '${newData}' where userId = ${request.body.userId}`, function(err, result) {
+      c.query(`update Users set donetask_ids = '${newData}' where userId = ${request.body.userId}`, function(err, result) {
         if (err) {
           console.log(err);
           response.send({res: 'not success'});
@@ -394,7 +385,7 @@ app.post('/addtask', function(request, response) {
           response.send({res: 'success'})
         }
       });
-      connection.end();
+      c.end();
     });
 });
 
@@ -405,16 +396,10 @@ app.post('/removetask', function(request, response) {
   response.set({
     "Content-Type": "application/json",
     "Access-Control-Allow-Origin": "*"
-  })
+  });
 
-  const connection = mysql2.createConnection({
-    host: ip,
-    user: 'AliBaBa',
-    password: 'A9l0E6x0',
-    database: 'OlimpEducation'
-  })
-
-  connection.connect(function (error) {
+  const c = new Connection();
+  c.connect(function (error) {
     if (error) {
       console.log(new Error(error));
     }
@@ -424,7 +409,7 @@ app.post('/removetask', function(request, response) {
     .then(res => res.json())
     .then(data => {
       let newData = data.ids.filter(i => Number(i) != Number(request.body.id)).join('/')
-      connection.query(`update Users set donetask_ids = '${newData}' where userId = ${request.body.userId}`, function(err, result) {
+      c.query(`update Users set donetask_ids = '${newData}' where userId = ${request.body.userId}`, function(err, _) {
         if (err) {
           console.log(err);
           response.send({res: 'not success'});
@@ -432,8 +417,532 @@ app.post('/removetask', function(request, response) {
           response.send({res: 'success'});
         }
       });
-      connection.end();
+      c.end();
     })
+});
+
+app.delete('/removeuser', function(request, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  if (request.body.email != '') {
+    c.query(`delete from Users where email = '${request.body.email}'`, function(e, _) {
+      if (e) {
+        console.log(e)
+        response.send({res: 'not success'});
+      } else {
+        response.send({res: 'success'})
+      }
+    })
+  } else if (request.body.userid != '') {
+    c.query(`delete from Users where userid = ${request.body.userid}`, function(e, _) {
+      if (e) {
+        console.log(e)
+        response.send({res: 'not success'});
+      } else {
+        response.send({res: 'success'})
+      }
+    })
+  } else {
+    response.status(500);
+  }
+  c.end();
+});
+
+app.get('/getusers', function(_, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  c.query('select * from Users', function(_, result) {
+    response.send(result);
+  })
+
+  c.end();
+})
+
+app.post('/takerights', function(request, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  if (request.body.userid != '') {
+    c.query(`update Users set isAdmin = true where userId = ${request.body.userid}`, function(e, _) {
+      if (e) {
+        console.log(e)
+        response.send({res: 'not success'});
+      } else {
+        response.send({res: 'success'})
+      }
+    });
+  } else if (request.body.email != '') {
+    c.query(`update Users set isAdmin = true where email = '${request.body.email}'`, function(e, _) {
+      if (e) {
+        console.log(e)
+        response.send({res: 'not success'});
+      } else {
+        response.send({res: 'success'})
+      }
+    });
+  } else {
+    response.send(500);
+  }
+
+  c.end();
+})
+
+app.post('/recallrights', function(request, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  if (request.body.userid != '') {
+    c.query(`update Users set isAdmin = false where userId = ${request.body.userid}`, function(e, _) {
+      if (e) {
+        console.log(e)
+        response.send({res: 'not success'});
+      } else {
+        response.send({res: 'success'})
+      }
+    });
+  } else if (request.body.email != '') {
+    c.query(`update Users set isAdmin = false where email = '${request.body.email}'`, function(e, _) {
+      if (e) {
+        console.log(e)
+        response.send({res: 'not success'});
+      } else {
+        response.send({res: 'success'})
+      }
+    });
+  } else {
+    response.send(500);
+  }
+  
+  c.end();
+})
+
+app.get('/checkrighs', function(request, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  c.query(`select isAdmin from Users where userId = ${request.query.userid}`, function(e, result) {
+    if (e || result.length == 0) {
+      console.log("error: " + toString(e))
+      response.status(500);
+    } else {
+      response.send({isAdmin: result[0].isAdmin == '1'});
+    }
+  });
+
+  c.end();
+});
+
+app.get('/gettasks', function(_, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  const c = new Connection();
+  c.connect(function (error) {
+      if (error) {
+        console.log(new Error(error));
+      }
+    }
+  )
+  c.query('select * from Tasks', function(_, result) {
+    response.send(result);
+  })
+
+  c.end()
+});
+
+app.get('/getanswers', function(_, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  const c = new Connection();
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  c.query('select * from Answers', function(_, result) {
+    response.send(result);
+  })
+
+  c.end();
+});
+
+app.post('/addnewtask', function(request, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  let tags = [];
+
+  for (let i = 1; i <= Object.keys(request.body).length - 4; i++) {
+    tags.push(request.body[`tag${i}`]);
+  }
+
+  tags = tags.join('/');
+
+  const c = new Connection();
+
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  c.query(`insert into Tasks set _id = ${request.body._id}, class = ${request.body.class}, level = ${request.body.level}, tags = '${tags}'`, function(e, _) {
+    if (e) {
+      console.log(e)
+      response.send({res: 'not success'});
+    } else {
+      response.send({res: 'success'});
+    }
+  })
+
+  c.end();
+});
+
+app.post('/addnewtaskfile', upload.array('files[]'), function (request, response) {
+  response.set({
+    "Content-type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+  console.log(request.body);
+  response.status(200);
+  response.send({res: 'success'});
+});
+
+app.delete('/removetaskadmin', function(request, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  let strId = String(request.body.id);
+  for (let i = 0; i < 4 - strId.length; i++) {
+    strId = '0' + strId;
+  }
+
+  const c = new Connection();
+
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  c.query(`delete from Tasks where _id = ${request.body.id}`, function(e, _) {
+    if (e) {
+      console.log(e)
+      response.send({res: 'not success'});
+    } else {
+      response.send({res: 'success'})
+    }
+  });
+
+  c.end();
+
+  fs.unlink(`./img/Tasks/ID${strId}.jpg`, (err) => {
+    if (err) console.log(new Error(err));
+  });
+
+  async function check() {
+    for (let i = 1; i < 4; i++) {
+      let r = await fetch(`http://${host}/api/img/Tasks/ID${strId}(${i}).jpg`);
+      if (r.status == 200) {
+        fs.unlink(`./img/Tasks/ID${strId}(${i}).jpg`, (err) => {
+          if (err) console.log(new Error(err));
+        });
+      }
+      else break;
+    }
+  }
+
+  check();
+});
+
+app.post('/edittask', function(request, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  let tags
+
+  if (request.body['tag1']) {
+    tags = [];
+  
+    for (let i = 1; i <= Object.keys(request.body).length - 4; i++) {
+      tags.push(request.body[`tag${i}`]);
+    }
+  
+    tags = tags.join('/');
+  } else {
+    tags = false;
+  }
+
+  const c = new Connection();
+
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  if (request.body.class || request.body.level || tags) {
+    c.query(`update Tasks set ${request.body.class ? `class = ${request.body.class}${tags || request.body.level ? ',' : ''} ` : ''}${request.body.level ? `level = ${request.body.level}${tags ? ',' : ''} ` : ''}${tags ? `tags = '${tags}' ` : ''}where _id = ${request.body._id}`, function(e, _) {
+      if (e) {
+        console.log(e)
+        response.send({res: 'not success'});
+      } else {
+        response.send({res: 'success'});
+      }
+    });
+  } else response.send({res: 'success'});
+  
+  c.end();
+});
+
+app.post('/edittaskfile', upload.array('files[]'), function (request, response) {
+  response.set({
+    "Content-type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  let strId = String(request.body._id);
+  for (let i = 0; i < 4 - strId.length; i++) {
+    strId = '0' + strId;
+  }
+
+  let n = request.files.length;
+
+  async function check() {
+    let r = await fetch(`http://${host}/api/img/Tasks/ID${strId}(${n}).jpg`);
+    if (r.status == 200) {
+      for (let i = n; n < 4; i++) {
+        let nr = await fetch(`http://${host}/api/img/Tasks/ID${strId}(${i}).jpg`);
+        if (nr.status == 200) {
+          fs.unlink(`./img/Tasks/ID${strId}(${i}).jpg`, (err) => {
+            if (err) console.log(new Error(err));
+          });
+        }
+        else break;
+      }
+    }
+  }
+
+  check();
+
+  response.status(200);
+  response.send({res: 'success'});
+});
+
+app.post('/addanswer', function(_, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+  response.send({res: 'success'});
+});
+
+app.post('/addanswerfile', upload.single('file'), function(request, response) {
+  response.set({
+    "Content-type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+  response.status(200);
+  const c = new Connection();
+
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  c.query(`insert into Answers set nameFile = '${request.file.filename}'`, function(e, _) {
+    if (e) {
+      console.log(e)
+      response.send({res: 'not success'});
+    } else {
+      response.send({res: 'success'});
+    }
+  })
+
+  c.end();
+})
+
+app.delete('/removeanswer', function(request, response){
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  let strId = String(request.body.id);
+  for (let i = 0; i < 4 - strId.length; i++) {
+    strId = '0' + strId;
+  }
+
+  const c = new Connection();
+
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  c.query(`select nameFile from Answers where nameFile like '%${request.body.id}.pdf'`, function (e, _) {
+    if (!e) {response.send({res: 'not success'}); return;}
+    c.end();
+    const nc = new Connection();
+    nc.connect(function (error) {
+      if (error) {
+        console.log(new Error(error));
+      }
+    });
+    nc.query(`delete from Answers where nameFile like '%${request.body.id}.pdf' `, function(e, _) {
+      if (e) {
+        console.log(e);
+        response.send({res: 'not success'});
+      } else {
+        response.send({res: 'success'});
+      }
+    });
+    nc.end();
+  });
+
+  fs.unlink(`./img/Answers/ID${strId}.jpg`, function (err) {
+    if (err) console.log(new Error(err));
+  });
+});
+
+app.post('/editanswer', function(request, response){
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  let strId = String(request.body.id);
+  for (let i = 0; i < 4 - strId.length; i++) {
+    strId = '0' + strId;
+  }
+
+  const c = new Connection();
+
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  c.query(`select nameFile from Answers where nameFile like '%${strId}.pdf'`, function(e, result) {
+    if (e) {
+      console.log(e)
+      response.send({res: 'not success'});
+    } else {
+      fs.unlink(`./img/Answers/${result[0].nameFile}`, function (err) {
+        if (err) console.log(new Error(err));
+      });
+      response.send({res: 'success'});
+    }
+  });
+
+  c.end();
+});
+
+app.post('/editanswerfile', upload.single('file'), function(request, response) {
+  response.status(200);
+  response.set({
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*"
+  });
+
+  let strId = String(request.body.id);
+  for (let i = 0; i < 4 - strId.length; i++) {
+    strId = '0' + strId;
+  }
+
+  const c = new Connection();
+
+  c.connect(function (error) {
+    if (error) {
+      console.log(new Error(error));
+    }
+  });
+
+  c.query(`update Answers set nameFile = '${request.file.filename}' where nameFile like '${strId}.pdf'`, function(e, _) {
+    if (e) {
+      console.log(e)
+      response.send({res: 'not success'});
+    } else {
+      response.send({res: 'success'});
+    }
+  });
+
+  c.end();
 })
 
 app.listen(5000);

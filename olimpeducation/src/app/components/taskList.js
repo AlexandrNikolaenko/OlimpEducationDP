@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import defChoice from "./defaultChoice";
+import { Text } from "./adminPanelCom";
 import { host } from "./host";
 
 let choice = defChoice();
@@ -15,7 +16,7 @@ function CreateTask(task, isDone){
                 <p className="font-sans text-2xl/[25px] tracking-[0.02em] max-[1146px]:text-lg/[25px] max-sm:text-sm/[14px] break-normal text-nowrap">класс: {task.class}</p>
                 <p className="font-sans text-2xl/[25px] tracking-[0.02em] max-[1146px]:text-lg/[25px] max-sm:text-sm/[14px] text-nowrap">сложность: {task.level}</p>
                 <p className="max-w-[500px] max-[1146px]:max-w-[350px] text-center max-[840px]:text-left font-sans text-2xl/[25px] tracking-[0.02em] max-[1146px]:text-lg/[25px] max-sm:text-sm/[14px] max-[340px]:break-all w-full hyphens-auto">теги: {task.tags.split('/').join(', ')}</p>
-                <Link className='rounded-[10px] px-5 py-[5px] bg-bright font-sans text-2xl/[25px] tracking-[0.02em] max-[1146px]:text-lg/[25px] max-sm:text-sm/[14px] max-sm:px-2.5' href={`/${task._id}/${task.class}/${task.level}/${task.tags.split('/').join(',').split(' ').join('_')}`}>Открыть</Link>
+                <Link className='rounded-[10px] px-5 py-[5px] bg-bright font-sans text-2xl/[25px] tracking-[0.02em] max-[1146px]:text-lg/[25px] max-sm:text-sm/[14px] max-sm:px-2.5' href={`/taskid/${task._id}/${task.class}/${task.level}/${task.tags.split('/').join(',').split(' ').join('_')}`}>Открыть</Link>
             </div>
         </li>
     )
@@ -28,14 +29,15 @@ export default function TaskList({_class, level, tags}){
     useEffect(() => {
         async function getData() {
                 try {
-                    await fetch(`http://${host}/api/?class=${_class}&level=${level}&tags=${tags.join(',')}`, {method: 'GET'})
+                    await fetch(`http://${host}/api/?class=${_class}&level=${level}&tags=${tags.join(',')}`, {method: 'GET', cache: 'no-cache'})
                     .then(res => res.json())
                     .then(data => {
-                        if (data[0] && data.length == result.length){
+                        if (data.length != result.length) {
+                            setResult(data);
+                        } else if (data.length != 0 && result.length == data.length) {
                             let dif = false;
                             for (let i = 0; i < data.length; i++){
-                                if (data[i]._id != data[i]._id) {
-                                    console.log(data[i]._id != data[i]._ig);
+                                if (data[i]._id != result[i]._id) {
                                     dif = true;
                                     break;
                                 }
@@ -43,8 +45,6 @@ export default function TaskList({_class, level, tags}){
                             if (dif){
                                 setResult(data);
                             }
-                        }else if (data[0] && data.length != result.length){
-                            setResult(data);
                         }
                     });
                     if (window.localStorage.getItem('userId') && window.localStorage.getItem('userId') != 'undefined' && doneTasks == null) {
@@ -60,8 +60,15 @@ export default function TaskList({_class, level, tags}){
         getData();
     });
     return (
-        <ul className="flex flex-col gap-3 max-[840px]:grid max-[840px]:grid-cols-3 max-[730px]:grid-cols-2">
-            {result.map(task => window.localStorage.getItem('userId') && window.localStorage.getItem('userId') && doneTasks != null ? CreateTask(task, typeof doneTasks.find(i => i == task._id) != 'undefined') : CreateTask(task, false))}
-        </ul>
+        <>
+        {result.length == 0
+            ?
+            <Text>По вашему запросу ничего не было найдено</Text>
+            :
+            <ul className="flex flex-col gap-3 max-[840px]:grid max-[840px]:grid-cols-3 max-[730px]:grid-cols-2">
+               {result.map(task => window.localStorage.getItem('userId') && window.localStorage.getItem('userId') && doneTasks != null ? CreateTask(task, typeof doneTasks.find(i => i == task._id) != 'undefined') : CreateTask(task, false))}
+            </ul>
+          }
+        </>
     );
 }

@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import TaskList from "./taskList"
 import { tags } from "./Tags";
+import { host } from "./host";
 
-const path = 'http://87.228.26.46/'
+const path = `http://${host}/`
 
 function ChoiceClass ({displayWidth, changeValue}) {
     let [choiceClass, setChoiceClass] = useState(8);
@@ -130,8 +131,6 @@ export default function ChoiceAndTasks(){
         otherCriteria.hardLevel = value;
     }
 
-    console.log(criteria, choiceTags, otherCriteria);
-
     if (window.innerWidth > 1145) {
         return (
             <>
@@ -140,7 +139,7 @@ export default function ChoiceAndTasks(){
                 <div className="w-[566px] flex flex-col gap-5">
                 <p className="font-sans text-2xl/[25px] tracking-[0.02em]">Выберите класс</p>
                 <ChoiceClass displayWidth={'large'} changeValue={changeClass}/>
-                <p className="font-sans text-2xl/[25px] tracking-[0.02em]">Выберите сложность</p>
+                <p className="font-sans text-2xl/[25px] tracking-[0.02em]">Выберите сложность (рекомендуем начинать с 1)</p>
                 <ChoiceLevel displayWidth={'large'} changeValue={changeLevel}/>
                 <p className="font-sans text-2xl/[25px] tracking-[0.02em]">Выберите интересующие теги</p>
                 <ChoiceTags displayWidth={'large'} changeValue={makeChoiceTags}/>
@@ -152,7 +151,7 @@ export default function ChoiceAndTasks(){
                 </div>
                 <div className="flex flex-col gap-7">
                 <h4 className="font-help text-[32px]/[1.3em] font-normal tracking-[0.04em] text-right">Стремись на <span className="text-bright">вершину Олимпа</span> с нами</h4>
-                <p className="font-sans text-2xl/[25px] tracking-[0.02em] text-right">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют.</span> (если по выбранным тегам не будет результатов, то отбразиться последний полученный результат)</p>
+                <p className="font-sans text-2xl/[25px] tracking-[0.02em] text-right">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют</span></p>
                 </div>
                 </div>
                 
@@ -171,12 +170,12 @@ export default function ChoiceAndTasks(){
                 <div className="wrapper mx-auto flex flex-col px-0 max-[1280px]:px-5">
                     <div className="flex flex-col gap-7">
                         <h4 className="font-help text-lg/[1.3em] font-normal tracking-[0.04em]">Стремись на <span className="text-bright">вершину Олимпа</span> с нами</h4>
-                        <p className="font-sans text-sm/[25px] tracking-[0.02em]">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют.</span> (если по выбранным тегам не будет результатов, то отбразиться последний полученный результат)</p>
+                        <p className="font-sans text-sm/[25px] tracking-[0.02em]">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют</span></p>
                     </div>
                     <div className="w-full flex flex-col gap-5 max-[400px]:gap-2.5">
                         <p className="font-sans text-sm/[25px] tracking-[0.02em]">Выберите класс</p>
                         <ChoiceClass displayWidth={'little'} changeValue={changeClass}/>
-                        <p className="font-sans text-sm/[25px] tracking-[0.02em]">Выберите сложность</p>
+                        <p className="font-sans text-sm/[25px] tracking-[0.02em]">Выберите сложность (рекомендуем начинать с 1)</p>
                         <ChoiceLevel displayWidth={'little'} changeValue={changeLevel}/>
                         <p className="font-sans text-sm/[25px] tracking-[0.02em]">Выберите интересующие теги</p>
                         <ChoiceTags displayWidth={'little'} changeValue={makeChoiceTags}/>
@@ -184,11 +183,9 @@ export default function ChoiceAndTasks(){
                         <button className="font-sans text-sm/[25px] font-normal tracking-[0.02em] px-[15px] py-[6px] bg-bright rounded-[10px] w-max hover:bg-light-main transition-colors duration-500 " onClick={() => {
                                 setCriteria({class: otherCriteria.class, hardLevel: otherCriteria.hardLevel, tags: choiceTags});
                                 document.getElementById('data-section').scrollIntoView({behavior: 'smooth'});
-
                             }}>Найти</button>
                     </div>
                 </div>
-                
             </section>
             <section id='data-section' className="wrapper mx-auto py-[60px] bg-local min-h-screen bg-center bg-no-repeat flex flex-col  gap-y-4 px-0 max-[1280px]:px-5" style={{backgroundImage: `url(${path}ThirdFon.png)`}}>
                 {/* <input placeholder="Найти по ID" className="px-7 bg-transparent py-2.5 rounded-[10px] border-medium border-2 placeholder:font-serif palceholder:text-xl palceholder:font-normal"></input> */}
@@ -205,14 +202,14 @@ export default function ChoiceAndTasks(){
                     <div className="flex flex-col gap-5 items-center">
                         <div className="flex flex-col gap-2.5 w-[588px]">
                             <h4 className="font-help font-normal tracking-[0.04em] text-center text-2xl/[1.3em]">Стремись на <span className="text-bright">вершину Олимпа</span> с нами</h4>
-                            <p className="font-sans tracking-[0.02em] text-center text-lg/[25px]">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют.</span> (если по выбранным тегам не будет результатов, то отбразиться последний полученный результат)</p>
+                            <p className="font-sans tracking-[0.02em] text-center text-lg/[25px]">Чтобы получить задания выберите <span className="text-bright">класс</span> и <span className="text-bright">сложность</span>, а также укажите <span className="text-bright">теги</span>, которые вас <span className="bg-gradient-to-r from-bright to-medium bg-clip-text text-transparent font-bold">интересуют</span></p>
                         </div>
                         <div className="flex justify-between gap-2">
                             <div className="flex flex-col justify-between h-[285px]">
                                 <div className="flex flex-col gap-y-2.5">
                                     <p className="font-sans tracking-[0.02em] text-lg/[25px]">Выберите класс</p>
                                     <ChoiceClass displayWidth={'medium'} changeValue={changeClass}/>
-                                    <p className="font-sans tracking-[0.02em] text-lg/[25px]">Выберите сложность</p>
+                                    <p className="font-sans tracking-[0.02em] text-lg/[25px]">Выберите сложность (рекомендуем начинать с 1)</p>
                                     <ChoiceLevel displayWidth={'medium'} changeValue={changeLevel}/>
                                 </div>
                                 <button className="font-sans text-lg/[25px] font-normal tracking-[0.02em] px-5 py-2 bg-bright rounded-[10px] w-max hover:bg-light-main transition-colors duration-500 justify-self-end" onClick={() => {
