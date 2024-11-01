@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { DownloadTaskButton, DownloadAnswerButton, AsResolved } from "./Buttons";
+import { host } from "./host";
 
 export function InfoPart ({id, params, url}) {
     if (window.innerWidth > 700) {
