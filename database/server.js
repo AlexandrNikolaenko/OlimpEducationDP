@@ -853,7 +853,7 @@ app.delete('/removeanswer', function(request, response){
   });
 
   c.query(`select nameFile from Answers where nameFile like '%${strId}.pdf'`, function (e, result) {
-    if (!e) {response.send({res: 'not success'}); return;}
+    if (e) {response.send({res: 'not success'}); return;}
     c.end();
     const nc = new Connection();
     nc.connect(function (error) {
