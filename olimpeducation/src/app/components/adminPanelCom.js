@@ -333,6 +333,7 @@ function AddFileInput({ name, formId, setIsEmpty, accept=".jpg", multiple=false 
             <button className="w-full px-5 py-10 rounded-[10px] bg-transparent border-super-light border-2 border-dashed" onClick={
                 (e) => {
                     e.preventDefault();
+                    console.log('Add file answer');
                     document.getElementById(formId).click();
                 }
             }>{nameFile}</button>
@@ -496,9 +497,6 @@ function AddAnswer() {
             <div className='flex justify-between items-center'>
                 <Text>Добавить ответ</Text>
                 <ArrowButton onClick={() => setIsOpen(!isOpen)} isOpen={isOpen} />
-                {/* <button onClick={() => setIsOpen(!isOpen)} className={`${isOpen ? 'rotate-180' : 'rotate-0'} transition-all duration-200`}>
-                    <Image alt='arrow' src={'/Arrow.svg'} height={43} width={43}/>
-                </button> */}
             </div>
             <form className={`${isOpen ? 'h-auto flex ' : 'h-0 overflow-hidden none'} flex-col gap-y-5 items-start`} id={'add-answer-form'} onSubmit={function (e){
                 dataProc('addanswer', 'Ответ успешно добавлен', 'Произошла ошибка', 'Произошла ошибка', e, 'add-answer-form', 'POST', !isEmptyFile);
