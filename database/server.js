@@ -8,6 +8,14 @@ const fs = require('fs');
 const host = 'olimpeducation.ru';
 const ip = '87.228.26.46';
 
+function getStrId(id){
+  let strId = String(id);
+  for (let i = 0; i < 4 - strId.length; i++) {
+    strId = '0' + strId;
+  }
+  return strId;
+}
+
 const app = express();
 
 app.use(bodyParser.json());
@@ -678,10 +686,7 @@ app.delete('/removetaskadmin', function(request, response) {
     "Access-Control-Allow-Origin": "*"
   });
 
-  let strId = String(request.body.id);
-  for (let i = 0; i < 4 - strId.length; i++) {
-    strId = '0' + strId;
-  }
+  let strId = getStrId(request.body.id);
 
   const c = new Connection();
 
@@ -770,10 +775,7 @@ app.post('/edittaskfile', upload.array('files[]'), function (request, response) 
     "Access-Control-Allow-Origin": "*"
   });
 
-  let strId = String(request.body._id);
-  for (let i = 0; i < 4 - strId.length; i++) {
-    strId = '0' + strId;
-  }
+  let strId = getStrId(request.body._id);
 
   let n = request.files.length;
 
@@ -840,10 +842,7 @@ app.delete('/removeanswer', function(request, response){
     "Access-Control-Allow-Origin": "*"
   });
 
-  let strId = String(request.body.id);
-  for (let i = 0; i < 4 - strId.length; i++) {
-    strId = '0' + strId;
-  }
+  let strId = getStrId(request.body.id);
 
   const c = new Connection();
 
@@ -853,7 +852,7 @@ app.delete('/removeanswer', function(request, response){
     }
   });
 
-  c.query(`select nameFile from Answers where nameFile like '%${request.body.id}.pdf'`, function (e, _) {
+  c.query(`select nameFile from Answers where nameFile like '%${strId}.pdf'`, function (e, result) {
     if (!e) {response.send({res: 'not success'}); return;}
     c.end();
     const nc = new Connection();
@@ -862,7 +861,10 @@ app.delete('/removeanswer', function(request, response){
         console.log(new Error(error));
       }
     });
-    nc.query(`delete from Answers where nameFile like '%${request.body.id}.pdf' `, function(e, _) {
+    fs.unlink(`./img/Answers/${result[0].nameFile}`, function (err) {
+      if (err) console.log(new Error(err));
+    });
+    nc.query(`delete from Answers where nameFile like '%${strId}.pdf' `, function(e, _) {
       if (e) {
         console.log(e);
         response.send({res: 'not success'});
@@ -871,10 +873,6 @@ app.delete('/removeanswer', function(request, response){
       }
     });
     nc.end();
-  });
-
-  fs.unlink(`./img/Answers/ID${strId}.jpg`, function (err) {
-    if (err) console.log(new Error(err));
   });
 });
 
@@ -885,10 +883,7 @@ app.post('/editanswer', function(request, response){
     "Access-Control-Allow-Origin": "*"
   });
 
-  let strId = String(request.body.id);
-  for (let i = 0; i < 4 - strId.length; i++) {
-    strId = '0' + strId;
-  }
+  let strId = getStrId(request.body.id);
 
   const c = new Connection();
 
@@ -920,10 +915,7 @@ app.post('/editanswerfile', upload.single('file'), function(request, response) {
     "Access-Control-Allow-Origin": "*"
   });
 
-  let strId = String(request.body.id);
-  for (let i = 0; i < 4 - strId.length; i++) {
-    strId = '0' + strId;
-  }
+  let strId = getStrId(request.body.id);
 
   const c = new Connection();
 
@@ -933,14 +925,14 @@ app.post('/editanswerfile', upload.single('file'), function(request, response) {
     }
   });
 
-  c.query(`update Answers set nameFile = '${request.file.filename}' where nameFile like '${strId}.pdf'`, function(e, _) {
+  c.query(`update Answers set nameFile = '${request.file.filename}' where nameFile like '%${strId}.pdf'`, function(e, _) {
     if (e) {
       console.log(e)
       response.send({res: 'not success'});
     } else {
       response.send({res: 'success'});
-    }
-  });
+    
+  }});
 
   c.end();
 })
