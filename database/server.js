@@ -27,7 +27,7 @@ function createTagsQuery(tagsStroke){
   let queryPart = '';
   let tags = tagsStroke.split(',');
   for (let tag of tags){
-    queryPart= queryPart.concat(` and tags like '%${tag}%'`);
+    queryPart= queryPart.concat(` and tags like '%${tag}%'${tag == 'органическая химия' && !Array.from(tags).includes('неорганическая химия') ? ` and tags not like '%неорганическая химия%'` : ''}`);
   }
   return queryPart;
 }
@@ -70,7 +70,7 @@ app.get('/', function(request, response) {
     response.set({
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
-    })
+    });
 
     const c = new Connection();
     c.connect(function (error) {

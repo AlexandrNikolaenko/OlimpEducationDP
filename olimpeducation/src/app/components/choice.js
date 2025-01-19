@@ -120,7 +120,6 @@ export default function ChoiceAndTasks(){
         }else{
             choiceTags.push(value);
         }
-        console.log(choiceTags);
     }
 
     function changeClass(value) {
