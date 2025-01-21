@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import defChoice from "./defaultChoice";
 import { Text } from "./adminPanelCom";
-import { host } from "./host";
 
 let choice = defChoice();
 
@@ -29,7 +28,7 @@ export default function TaskList({_class, level, tags}){
     useEffect(() => {
         async function getData() {
                 try {
-                    await fetch(`http://${host}/api/?class=${_class}&level=${level}&tags=${tags.join(',')}`, {method: 'GET', cache: 'no-cache'})
+                    await fetch(`/api/?class=${_class}&level=${level}&tags=${tags.join(',')}`, {method: 'GET', cache: 'no-cache'})
                     .then(res => res.json())
                     .then(data => {
                         if (data.length != result.length) {
@@ -48,7 +47,7 @@ export default function TaskList({_class, level, tags}){
                         }
                     });
                     if (window.localStorage.getItem('userId') && window.localStorage.getItem('userId') != 'undefined' && doneTasks == null) {
-                        await fetch(`http://${host}/api/getdoneid?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'})
+                        await fetch(`/api/getdoneid?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'})
                             .then(res => res.json())
                             .then(data => setDoneTasks(data.ids))
                     }

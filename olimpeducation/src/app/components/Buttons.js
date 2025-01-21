@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { host } from "./host";
 
 function downloadFile(fileName, url) {
     const a = document.createElement('a');
@@ -32,7 +31,7 @@ export function AsResolved({taskId, isDone}) {
     useEffect(() => {
         async function getIsDone() {
             if (window.localStorage.getItem('userId') && window.localStorage.getItem('userId') != 'undefined'){
-                await fetch(`http://${host}/api/getdoneid?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'})
+                await fetch(`/api/getdoneid?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'})
                         .then(res => res.json())
                         .then(data => {if (isMark != (typeof data.ids.find(i => i == taskId) != 'undefined')) setIsMark(typeof data.ids.find(i => i == taskId) != 'undefined')})
             }
@@ -41,7 +40,7 @@ export function AsResolved({taskId, isDone}) {
     });
 
     function addtask () {
-        fetch(`http://${host}/api/addtask`, {
+        fetch(`/api/addtask`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -60,7 +59,7 @@ export function AsResolved({taskId, isDone}) {
     }
 
     function removeTask() {
-        fetch(`http://${host}/api/removetask`, {
+        fetch(`/api/removetask`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

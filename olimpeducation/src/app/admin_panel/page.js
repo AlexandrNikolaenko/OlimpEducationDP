@@ -2,7 +2,6 @@
 
 import { ControlAccUsers, ControlTasks } from "../components/adminPanelCom";
 import { useEffect, useState } from "react";
-import { host } from "../components/host";
 
 export default function PersonalPage() {
     const [isAdmin, setIsAdmin] = useState(false);
@@ -11,7 +10,7 @@ export default function PersonalPage() {
     useEffect(() => {
         async function getData () {
             if (isCheck || window.localStorage.getItem('userId') == 'udnefined') return;
-            await fetch (`http://${host}/api/checkrighs?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'})
+            await fetch (`/api/checkrighs?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'})
                 .then(res => res.json())
                 .then(data => {
                     setIsAdmin(Boolean(data.isAdmin));

@@ -2,17 +2,16 @@
 
 import { TaskImage } from "../../components/taskImage";
 import { InfoPart, ButtonPart } from "../../components/infoParts";
-import { host } from "@/app/components/host";
 
 export default async function Page({params}) {
     let urls, answerUrl;
     let id = params.taskid[0];
 
     if (!isNaN(id)){
-        await fetch(`http://${host}/api/answer?id=${id}`, {method: 'GET', cache: 'no-cache'})
+        await fetch(`/api/answer?id=${id}`, {method: 'GET', cache: 'no-cache'})
                 .then(res => res.json()).then(data => answerUrl = data.url);
     
-        await fetch(`http://${host}/api/task?id=${id}`, {method: 'GET', cache: 'no-cache'})
+        await fetch(`/api/task?id=${id}`, {method: 'GET', cache: 'no-cache'})
                 .then(res => res.json())
                 .then(data => urls = data.url);
     }
