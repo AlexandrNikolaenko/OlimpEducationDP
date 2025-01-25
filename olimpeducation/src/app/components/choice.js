@@ -6,7 +6,7 @@ import TaskList from "./taskList"
 import { tags } from "./Tags";
 import { host } from "./host";
 
-const path = `https://${host}/`
+const path = `http://${host}/`
 
 function ChoiceClass ({displayWidth, changeValue}) {
     let [choiceClass, setChoiceClass] = useState(8);
