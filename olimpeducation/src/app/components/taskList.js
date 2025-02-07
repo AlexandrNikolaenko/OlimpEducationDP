@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import defChoice from "./defaultChoice";
 import { Text } from "./adminPanelCom";
+import { host } from "./host";
 
 let choice = defChoice();
 
