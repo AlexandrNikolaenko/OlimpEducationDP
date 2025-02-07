@@ -28,28 +28,25 @@ export default function TaskList({_class, level, tags}){
     useEffect(() => {
         async function getData() {
                 try {
-                    await fetch(`/api/?class=${_class}&level=${level}&tags=${tags.join(',')}`, {method: 'GET', cache: 'no-cache'})
-                    .then(res => res.json())
-                    .then(data => {
-                        if (data.length != result.length) {
-                            setResult(data);
-                        } else if (data.length != 0 && result.length == data.length) {
-                            let dif = false;
-                            for (let i = 0; i < data.length; i++){
-                                if (data[i]._id != result[i]._id) {
-                                    dif = true;
-                                    break;
-                                }
-                            }
-                            if (dif){
-                                setResult(data);
+                    let res = await fetch(`/api/?class=${_class}&level=${level}&tags=${tags.join(',')}`, {method: 'GET', cache: 'no-cache'});
+                    let data = await res.json();
+                    if (data.length != result.length) {
+                        setResult(data);
+                    } else if (data.length != 0 && result.length == data.length) {
+                        let dif = false;
+                        for (let i = 0; i < data.length; i++){
+                            if (data[i]._id != result[i]._id) {
+                                dif = true;
+                                break;
                             }
                         }
-                    });
+                        if (dif){
+                            setResult(data);
+                        }
+                    }
                     if (window.localStorage.getItem('userId') && window.localStorage.getItem('userId') != 'undefined' && doneTasks == null) {
-                        await fetch(`/api/getdoneid?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'})
-                            .then(res => res.json())
-                            .then(data => setDoneTasks(data.ids))
+                        let result = await fetch(`/api/getdoneid?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'});
+                        setDoneTasks((await result.json()).ids);
                     }
                 }
                 catch (err) {
