@@ -1,1 +1,1 @@
-export const host = 'http://olimpeducation.ru';
+export const host = 'https://olimpeducation.ru';
