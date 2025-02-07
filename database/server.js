@@ -168,12 +168,12 @@ app.get('/task', function(request, response) {
     id = '0'.concat(id);
   };
 
-  let url = [`http://${host}/api/img/Tasks/ID${id}.jpg`];
+  let url = [`https://${host}/api/img/Tasks/ID${id}.jpg`];
 
   async function check() {
     for (let i = 1; i < 4; i++) {
-      let r = await fetch(`http://${host}/api/img/Tasks/ID${id}(${i}).jpg`);
-      if (r.status == 200) url.push(`http://${host}/api/img/Tasks/ID${id}(${i}).jpg`);
+      let r = await fetch(`https://${host}/api/img/Tasks/ID${id}(${i}).jpg`);
+      if (r.status == 200) url.push(`https://${host}/api/img/Tasks/ID${id}(${i}).jpg`);
       else break;
     }
     response.send({url: url});
@@ -209,7 +209,7 @@ app.get('/answer', function(request, response) {
   });
 
   c.query(`select nameFile from Answers where nameFile like "%${id}.pdf"`, function(_, result) {
-    response.send({url: `http://${host}/api/img/Answers/${result[0].nameFile}`});
+    response.send({url: `https://${host}/api/img/Answers/${result[0].nameFile}`});
   });
 
   c.end();
@@ -713,7 +713,7 @@ app.delete('/removetaskadmin', function(request, response) {
 
   async function check() {
     for (let i = 1; i < 4; i++) {
-      let r = await fetch(`http://${host}/api/img/Tasks/ID${strId}(${i}).jpg`);
+      let r = await fetch(`https://${host}/api/img/Tasks/ID${strId}(${i}).jpg`);
       if (r.status == 200) {
         fs.unlink(`./img/Tasks/ID${strId}(${i}).jpg`, (err) => {
           if (err) console.log(new Error(err));
@@ -780,10 +780,10 @@ app.post('/edittaskfile', upload.array('files[]'), function (request, response) 
   let n = request.files.length;
 
   async function check() {
-    let r = await fetch(`http://${host}/api/img/Tasks/ID${strId}(${n}).jpg`);
+    let r = await fetch(`https://${host}/api/img/Tasks/ID${strId}(${n}).jpg`);
     if (r.status == 200) {
       for (let i = n; n < 4; i++) {
-        let nr = await fetch(`http://${host}/api/img/Tasks/ID${strId}(${i}).jpg`);
+        let nr = await fetch(`https://${host}/api/img/Tasks/ID${strId}(${i}).jpg`);
         if (nr.status == 200) {
           fs.unlink(`./img/Tasks/ID${strId}(${i}).jpg`, (err) => {
             if (err) console.log(new Error(err));
