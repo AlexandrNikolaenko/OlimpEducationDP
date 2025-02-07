@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { SubmitButton, ArrowButton } from "./Buttons";
+import { host } from "./host";
 
 export function ControlAccUsers() {
     const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +39,7 @@ function dataProc(url, successMessage, noSuccessMessage, errMessage, event, id, 
     let formData = new FormData(document.getElementById(id));
     let relFormData = formData;
     formData = Object.fromEntries(formData);
-    sendFormData(`/api/${url}`, formData, successMessage, noSuccessMessage, errMessage, method, isFile,  relFormData);
+    sendFormData(`${host}/api/${url}`, formData, successMessage, noSuccessMessage, errMessage, method, isFile,  relFormData);
 }
 
 function sendFormData (url, formData, successMessage, noSuccessMessage, errMessage, method, isFile, relFormData) {
@@ -131,7 +132,7 @@ function AddUser () {
                     e.preventDefault();
                     let formData = new FormData(document.getElementById('add-user-form'));
                     formData = Object.fromEntries(formData);
-                    localSendFormData(`/api/signup`, formData)
+                    localSendFormData(`${host}/api/signup`, formData)
                 }}>
                 <InputGridList>
                     <InputField placeholder={'Name'} name={'name'}/>
@@ -202,7 +203,7 @@ function ShowAllUsers () {
     const [tableData, setTableData] = useState([]);
 
     async function showData () {
-        await fetch(`/api/getusers`, {method: 'GET'})
+        await fetch(`${host}/api/getusers`, {method: 'GET'})
             .then(res => res.json())
             .then(data => setTableData(data));
     }
@@ -430,7 +431,7 @@ function ShowAllTask() {
     const [tableData, setTableData] = useState([]);
     
     async function showData () {
-        await fetch(`/api/gettasks`, {method: 'GET'})
+        await fetch(`${host}/api/gettasks`, {method: 'GET'})
             .then(res => res.json())
             .then(data => setTableData(data));
     }
@@ -554,7 +555,7 @@ function ShowAllAnswers() {
     const [tableData, setTableData] = useState([]);
     
     async function showData () {
-        await fetch(`/api/getanswers`, {method: 'GET'})
+        await fetch(`${host}/api/getanswers`, {method: 'GET'})
             .then(res => res.json())
             .then(data => setTableData(data));
     }

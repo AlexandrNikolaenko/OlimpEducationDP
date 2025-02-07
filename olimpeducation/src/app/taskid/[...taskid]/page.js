@@ -2,6 +2,7 @@
 
 import { TaskImage } from "../../components/taskImage";
 import { InfoPart, ButtonPart } from "../../components/infoParts";
+import { host } from "@/app/components/host";
 
 export default async function Page({params}) {
     let urls, answerUrl;
@@ -9,16 +10,11 @@ export default async function Page({params}) {
 
     if (!isNaN(id)){
         try {
-            let res1 = await fetch(`/api/answer?id=${id}`, {method: 'GET', cache: 'no-cache'});
+            let res1 = await fetch(`${host}/api/answer?id=${id}`, {method: 'GET', cache: 'no-cache'});
             answerUrl = (await res1.json()).url;
-            // await fetch(`/api/answer?id=${id}`, {method: 'GET', cache: 'no-cache'})
-            //     .then(res => res.json()).then(data => answerUrl = data.url);
             
-            let res2 = await fetch(`/api/task?id=${id}`, {method: 'GET', cache: 'no-cache'});
+            let res2 = await fetch(`${host}/api/task?id=${id}`, {method: 'GET', cache: 'no-cache'});
             urls = (await res2.json()).url;
-            // await fetch(`/api/task?id=${id}`, {method: 'GET', cache: 'no-cache'})
-            //     .then(res => res.json())
-            //     .then(data => urls = data.url);
         } catch(e) {
             console.log(e);
         }

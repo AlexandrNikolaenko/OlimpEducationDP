@@ -28,7 +28,7 @@ export default function TaskList({_class, level, tags}){
     useEffect(() => {
         async function getData() {
                 try {
-                    let res = await fetch(`/api/?class=${_class}&level=${level}&tags=${tags.join(',')}`, {method: 'GET', cache: 'no-cache'});
+                    let res = await fetch(`${host}/api/?class=${_class}&level=${level}&tags=${tags.join(',')}`, {method: 'GET', cache: 'no-cache'});
                     let data = await res.json();
                     if (data.length != result.length) {
                         setResult(data);
@@ -45,7 +45,7 @@ export default function TaskList({_class, level, tags}){
                         }
                     }
                     if (window.localStorage.getItem('userId') && window.localStorage.getItem('userId') != 'undefined' && doneTasks == null) {
-                        let result = await fetch(`/api/getdoneid?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'});
+                        let result = await fetch(`${host}/api/getdoneid?userid=${window.localStorage.getItem('userId')}`, {method: 'GET'});
                         setDoneTasks((await result.json()).ids);
                     }
                 }
